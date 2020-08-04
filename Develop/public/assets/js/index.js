@@ -36,7 +36,7 @@ const deleteNote = (id) => {
 const renderActiveNote = () => {
   $saveNoteBtn.hide();
 
-  if (activeNote.id) {
+  if (activeNote.id || activeNote.id == 0) {
     $noteTitle.attr("readonly", true);
     $noteText.attr("readonly", true);
     $noteTitle.val(activeNote.title);
@@ -50,10 +50,12 @@ const renderActiveNote = () => {
 };
 
 // Get the note data from the inputs, save it to the db and update the view
+
 const handleNoteSave = function () {
   const newNote = {
     title: $noteTitle.val(),
     text: $noteText.val(),
+    id: index,
   };
 
   saveNote(newNote).then(() => {
@@ -66,9 +68,9 @@ const handleNoteSave = function () {
 const handleNoteDelete = function (event) {
   // prevents the click listener for the list from being called when the button inside of it is clicked
   event.stopPropagation();
-
   const note = $(this).parent(".list-group-item").data();
-
+  console.log(note.id);
+  console.log(activeNote.id);
   if (activeNote.id === note.id) {
     activeNote = {};
   }
@@ -111,6 +113,7 @@ const renderNoteList = (notes) => {
   // unless withDeleteButton argument is provided as false
   const create$li = (text, withDeleteButton = true) => {
     const $li = $("<li class='list-group-item'> ");
+
     const $span = $("<span>").text(text);
     $li.append($span);
 
@@ -127,8 +130,9 @@ const renderNoteList = (notes) => {
     noteListItems.push(create$li("No saved Notes", false));
   }
 
-  notes.forEach((note) => {
+  notes.forEach((note, i) => {
     const $li = create$li(note.title).data(note);
+    $li.attr("data", i);
     noteListItems.push($li);
   });
 
