@@ -57,7 +57,9 @@ app.post("/api/notes", function (req, res) {
 // the`db.json` file, remove the note with the given`id` property,
 // and then rewrite the notes to the`db.json` file.
 app.delete("/api/notes/:id", function (req, res) {
-  res.send("DELETE request to homepage");
+  const requestId = req.params.id;
+  notes.splice(requestId, 1);
+  res.send("/notes");
 });
 // * GET `*` - Should return the `index.html` file
 app.get("*", function (req, res) {
